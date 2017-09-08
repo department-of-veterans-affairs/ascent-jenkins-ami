@@ -1,0 +1,49 @@
+{
+    "variables": {
+        "aws_access_key": "",
+        "aws_secret_key": "",
+        "aws_region": "us-gov-west-1"
+    },
+    "builders": [
+        {
+            "type": "amazon-ebs",
+            "access_key": "{{user `aws_access_key`}}",
+            "secret_key": "{{user `aws_secret_key`}}",
+            "region": "{{user `aws_region`}}",
+            "source_ami": "ami-1fbe067e",
+            "instance_type": "t2.micro",
+            "ssh_username": "ec2-user",
+            "ssh_pty": true,
+            "ami_name": "ascent-jenkins-master {{timestamp}}",
+            "launch_block_device_mappings": [
+                {
+                    "device_name": "/dev/sda1",
+                    "volume_size": 10,
+                    "volume_type": "gp2",
+                    "delete_on_termination": true
+                }
+            ],
+            "tags": {
+                "name": "ascent-jenkins-master"
+            },
+            "snapshot_tags": {
+                "name": "ascent-jenkins-master"
+            }
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "file",
+            "source": "config",
+            "destination": "~/config"
+        },
+        {
+            "type": "shell",
+            "scripts": [
+                "install-java.sh",
+                "install-jenkins.sh",
+                "configure-jenkins.sh"
+            ]
+        }
+    ]
+}
