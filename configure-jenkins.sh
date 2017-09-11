@@ -1,4 +1,5 @@
 JENKINS_URL="http://localhost:8080"
+JENKINS_HOME="/var/lib/jenkins"
 
 #Wait till jenkins is available
 printf "Waiting for Jenkins to start " 
@@ -29,6 +30,14 @@ JENKINS_CLI="java -jar jenkins-cli.jar -s $JENKINS_URL -auth admin:$API_TOKEN"
 PLUGINS=""
 while read plugin; do
     PLUGINS="$PLUGINS $plugin"
-done <config/plugins.txt
+done <plugins.txt
 $JENKINS_CLI install-plugin $PLUGINS
+
+# Stop the Jenkins server
+sudo service jenkins stop
+sleep 10
+
+# Copy over our custom config files
+sudo cp config/* $JENKINS_HOME
+chown -R jenkins:jenkins $JENKINS_HOME
 

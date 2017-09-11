@@ -38,6 +38,11 @@
             "destination": "~/config"
         },
         {
+            "type": "file",
+            "source": "plugins.txt",
+            "destination": "~/plugins.txt"
+        },
+        {
             "type": "shell",
             "scripts": [
                 "install-java.sh",
