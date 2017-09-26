@@ -46,6 +46,7 @@
             "type": "shell",
             "scripts": [
                 "install-java.sh",
+                "install-tools.sh",
                 "install-jenkins.sh",
                 "configure-jenkins.sh"
             ]

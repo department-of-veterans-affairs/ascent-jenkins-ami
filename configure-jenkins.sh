@@ -39,5 +39,5 @@ sleep 10
 
 # Copy over our custom config files
 sudo cp config/* $JENKINS_HOME
-chown -R jenkins:jenkins $JENKINS_HOME
+sudo chown -R jenkins:jenkins $JENKINS_HOME
 

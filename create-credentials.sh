@@ -1,13 +1,14 @@
+JENKINS_URL="http://localhost:8080"
 # Generate authentication token
 ADMIN_USER="admin"
 ADMIN_PASSWORD=$(sudo cat /var/lib/jenkins/secrets/initialAdminPassword)
 # Get the API token for CLI authentication
 API_TOKEN=$(curl -u $ADMIN_USER:$ADMIN_PASSWORD $JENKINS_URL/me/configure | sed -rn 's/.*id="apiToken"[^>]*value="([a-z0-9]+)".*/\1/p')
 
-CRUMB=$(curl -s -u ${ADMIN_USER}:${API_TOKEN} "http://localhost:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)")
+CRUMB=$(curl -s -u ${ADMIN_USER}:${API_TOKEN} "$JENKINS_URL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)")
 
 # GitHub Authentication
-curl -H $CRUMB -X POST -u ${ADMIN_USER}:${API_TOKEN} "http://localhost:8080/credentials/store/system/domain/_/createCredentials" \
+curl -H $CRUMB -X POST -u ${ADMIN_USER}:${API_TOKEN} "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
 --data-urlencode 'json={
   "": "0",
   "credentials": {
@@ -20,7 +21,7 @@ curl -H $CRUMB -X POST -u ${ADMIN_USER}:${API_TOKEN} "http://localhost:8080/cred
 }'
 
 # Nexus Authentication
-curl -H $CRUMB -X POST -u ${ADMIN_USER}:${API_TOKEN} "http://localhost:8080/credentials/store/system/domain/_/createCredentials" \
+curl -H $CRUMB -X POST -u ${ADMIN_USER}:${API_TOKEN} "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
 --data-urlencode 'json={
   "": "0",
   "credentials": {
@@ -34,7 +35,7 @@ curl -H $CRUMB -X POST -u ${ADMIN_USER}:${API_TOKEN} "http://localhost:8080/cred
 }'
 
 # Vault Credential
-curl -H $CRUMB -X POST -u ${ADMIN_USER}:${API_TOKEN} "http://localhost:8080/credentials/store/system/domain/_/createCredentials" \
+curl -H $CRUMB -X POST -u ${ADMIN_USER}:${API_TOKEN} "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
 --data-urlencode 'json={
   "": "0",
   "credentials": {
@@ -43,19 +44,5 @@ curl -H $CRUMB -X POST -u ${ADMIN_USER}:${API_TOKEN} "http://localhost:8080/cred
     "accessToken": "'"${GITHUB_TOKEN}"'",
     "description": "Nexus Deployment",
     "$class": "com.datapipe.jenkins.vault.credentials.VaultGithubTokenCredential"
-  }
-}'
-
-# Vault Credential
-curl -H $CRUMB -X POST -u ${ADMIN_USER}:${API_TOKEN} "http://localhost:8080/credentials/store/system/domain/_/createCredentials" \
---data-urlencode 'json={
-  "": "0",
-  "credentials": {
-    "scope": "GLOBAL",
-    "id": "Oracle",
-    "username": "'"$ORACLE_USER"'",
-    "password": "'"$ORACLE_PASSWORD"'",
-    "description": "Nexus Deployment",
-    "$class": "com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl"
   }
 }'
