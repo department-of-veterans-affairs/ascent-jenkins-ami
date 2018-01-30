@@ -1,6 +1,3 @@
-# Update
-sudo yum -y update 
-
 # Git
 sudo yum install -y git unzip
 
