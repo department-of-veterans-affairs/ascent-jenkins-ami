@@ -2,7 +2,11 @@
     "variables": {
         "aws_access_key": "",
         "aws_secret_key": "",
-        "aws_region": "us-gov-west-1"
+        "aws_region": "us-gov-west-1",
+        "vault_token": "",
+        "vault_addr": "",
+        "subnet_id": "",
+        "base_ami_id": "",
     },
     "builders": [
         {
@@ -10,7 +14,9 @@
             "access_key": "{{user `aws_access_key`}}",
             "secret_key": "{{user `aws_secret_key`}}",
             "region": "{{user `aws_region`}}",
-            "source_ami": "ami-1fbe067e",
+            "source_ami": "{{user `base_ami_id`}}",
+            "subnet_id": "subnet-025d7a67",
+            "security_group_id": "sg-a7df9cc2",
             "instance_type": "t2.micro",
             "ssh_username": "ec2-user",
             "ssh_pty": true,
@@ -39,15 +45,36 @@
         },
         {
             "type": "file",
+            "source": "template",
+            "destination": "~/template"
+        },
+        {
+            "type": "file",
             "source": "plugins.txt",
             "destination": "~/plugins.txt"
+        },
+        {
+            "type": "file",
+            "source": "install-jenkins.sh",
+            "destination": "~/install-jenkins.sh"
         },
         {
             "type": "shell",
             "scripts": [
                 "install-java.sh",
-                "install-tools.sh",
-                "install-jenkins.sh",
+                "install-tools.sh"
+            ]
+        },
+        {  
+            "type": "shell",
+            "inline": [
+                  "chmod 755 ~/install-jenkins.sh",
+                  "sudo /bin/bash ~/install-jenkins.sh {{user `vault_addr`}} {{user `vault_token`}}"
+            ]
+        },
+        {
+            "type": "shell",
+            "scripts": [
                 "configure-jenkins.sh"
             ]
         }
