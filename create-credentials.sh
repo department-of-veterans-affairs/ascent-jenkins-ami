@@ -34,6 +34,21 @@ curl -H $CRUMB -X POST -u ${ADMIN_USER}:${API_TOKEN} "$JENKINS_URL/credentials/s
   }
 }'
 
+# Fortify node Authentication
+curl -H $CRUMB -X POST -u ${ADMIN_USER}:${API_TOKEN} "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
+--data-urlencode 'json={
+  "": "0",
+  "credentials": {
+    "scope": "GLOBAL",
+    "id": "fortify",
+    "username": "'"$FORTIFY_SSH_USER"'",
+    "password": "'"$FORTIFY_SSH_PASSWORD"'",
+    "description": "SSH authentication to fortify node",
+    "$class": "com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl"
+  }
+}'
+
+
 # Vault Credential
 curl -H $CRUMB -X POST -u ${ADMIN_USER}:${API_TOKEN} "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" \
 --data-urlencode 'json={
