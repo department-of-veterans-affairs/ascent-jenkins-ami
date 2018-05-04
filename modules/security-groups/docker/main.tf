@@ -19,7 +19,7 @@ resource "aws_security_group" "docker" {
      from_port          = "${var.jenkins_unencrypted_port}"
      to_port            = "${var.jenkins_unencrypted_port}"
      protocol           = "tcp"
-     security_groups	= ["${aws_security_group.jenkins.id}"]
+     security_groups	= ["${var.jenkins_master_security_group_id}"]
    }
 
   # encrypted traffic from Jenkins

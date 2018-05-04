@@ -7,6 +7,9 @@ variable "vpc_id" {
   description = "The VPC id for the security group"
 }
 
+variable "jenkins_master_security_group_id" {
+  description = "The jenkins master security group id to give access to"
+}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # OPTIONAL PARAMETERS

@@ -50,6 +50,7 @@ resource "aws_instance" "jenkins_slave" {
 module "security_group" {
   source = "../security-groups/docker/"
   vpc_id = "${var.vpc_id}"
+  jenkins_master_security_group_id = "${var.jenkins_master_security_group_id}"
 }
 
 # ---------------------------------------------------------------------------------------------------------------------

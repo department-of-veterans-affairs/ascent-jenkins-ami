@@ -34,7 +34,7 @@ resource "aws_instance" "jenkins_master" {
 
   # Use value of supplied variable, if specified, but if not,
   #     lookup the latest AMI we have for 'ascent-jenkins-master *'
-  ami = "${data.aws_ami.jenkins_slave.id}"
+  ami = "${data.aws_ami.jenkins_master.id}"
 
   key_name = "${var.key_name}"
 
@@ -58,4 +58,9 @@ resource "aws_instance" "jenkins_master" {
 
 module "jenkins_slave" {
   source = "../jenkins_slave/"
+  jenkins_master_security_group_id = "${module.jenkins_security_group.jenkins_master_security_group_id}"
+  key_name = "${var.key_name}"
+  instance_subnet_id = "${var.instance_subnet_id}"
+  env = "${var.env}"
+  vpc_id = "${var.vpc_id}"
 }
