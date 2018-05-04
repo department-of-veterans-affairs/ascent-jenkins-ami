@@ -22,7 +22,7 @@ data "aws_ami" "jenkins_master" {
 # JENKINS MASTER SECURITY GROUP
 # ---------------------------------------------------------------------------------------------------------------------
 module "jenkins_security_group" {
-  source = "../security_groups/jenkins/"
+  source = "../security-groups/jenkins/"
   vpc_id = "${var.vpc_id}"
 }
 
