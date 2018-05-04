@@ -34,7 +34,7 @@ resource "aws_instance" "jenkins_master" {
 
   # Use value of supplied variable, if specified, but if not,
   #     lookup the latest AMI we have for 'ascent-jenkins-master *'
-  ami = "${length(data.aws_ami.jenkins_master.id) >= 1 ? data.aws_ami.jenkins_master.id : var.ami_id}"
+  ami = "${length(var.ami_id) >= 1 ? var.ami_id : data.aws_ami-jenkins_master.id}"
 
   key_name = "${var.key_name}"
 
