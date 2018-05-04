@@ -1,0 +1,65 @@
+#######################################################################################################################
+#  Jenkins slave module
+#######################################################################################################################
+
+# ---------------------------------------------------------------------------------------------------------------------
+# AWS AMI DATA
+# ---------------------------------------------------------------------------------------------------------------------
+data "aws_ami" "jenkins_slave" {
+  count       = "${length(var.ami_id) >= 1 ? 0 : 1}"
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["nomad-consul-amazon-linux-*"]
+  }
+
+  owners = ["272417811699"]
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# JENKINS SLAVE EC2 INSTANCE
+# ---------------------------------------------------------------------------------------------------------------------
+resource "aws_instance" "jenkins_slave" {
+  instance_type = "${var.instance_type}"
+
+  # Use value of supplied variable, if specified, but if not,
+  #     lookup the latest AMI we have for nomad-consul-amazon-linux-*
+  ami = "${data.aws_ami.jenkins_slave.id}"
+
+  key_name = "${var.key_name}"
+
+  # Our Security group to allow HTTP and SSH access
+  vpc_security_group_ids = ["${module.security_group.security_group_id}"]
+
+  subnet_id = "${var.instance_subnet_id}"
+  user_data = "${data.template_file.user_data_slave.rendered}"
+
+  tags {
+    Name = "${var.instance_name}",
+    SAN = "${var.san}"
+    ProjectName = "${var.project_name}"
+    VAECID = "${var.vaecid}"
+    Environment = "${var.env}"
+  }
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# JENKINS SLAVE SECURITY GROUP
+# ---------------------------------------------------------------------------------------------------------------------
+module "security_group" {
+  source = "../security-groups/docker/"
+  vpc_id = "${var.vpc_id}"
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# JENKINS SLAVE USER DATA
+# ---------------------------------------------------------------------------------------------------------------------
+data "template_file" "user_data_slave" {
+  template = "${file("${path.module}/user-data.sh")}"
+  vars {
+    VAULT_URL="${var.vault_url}",
+    DOCKER_REPO_URL="${var.docker_repo_url}",
+    DOCKER_DEPLOY_URL="${var.docker_deploy_url}"
+  }
+}
