@@ -2,22 +2,6 @@
 #  Jenkins master module
 #######################################################################################################################
 
-
-# ---------------------------------------------------------------------------------------------------------------------
-# AWS AMI DATA
-# ---------------------------------------------------------------------------------------------------------------------
-data "aws_ami" "jenkins_master" {
-  count       = "${length(var.ami_id) >= 1 ? 0 : 1}"
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["ascent-jenkins-master *"]
-  }
-
-  owners = ["272417811699"]
-}
-
 # ---------------------------------------------------------------------------------------------------------------------
 # JENKINS MASTER SECURITY GROUP
 # ---------------------------------------------------------------------------------------------------------------------
@@ -34,7 +18,7 @@ resource "aws_instance" "jenkins_master" {
 
   # Use value of supplied variable, if specified, but if not,
   #     lookup the latest AMI we have for 'ascent-jenkins-master *'
-  ami = "${length(var.ami_id) >= 1 ? var.ami_id : data.aws_ami-jenkins_master.id}"
+  ami = "${var.jenkins_ami_id}"
 
   key_name = "${var.key_name}"
 
