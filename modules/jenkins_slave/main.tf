@@ -25,7 +25,7 @@ resource "aws_instance" "jenkins_slave" {
 
   # Use value of supplied variable, if specified, but if not,
   #     lookup the latest AMI we have for nomad-consul-amazon-linux-*
-  ami = "${data.aws_ami.jenkins_slave.id}"
+  ami = "${var.jenkins_slave_ami_id}"
 
   key_name = "${var.key_name}"
 
