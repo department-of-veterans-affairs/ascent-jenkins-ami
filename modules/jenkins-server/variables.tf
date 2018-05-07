@@ -8,7 +8,11 @@ variable "key_name" {
 }
 
 variable "jenkins_ami_id" {
-    description = "ID for the AMI to launch the instance as."
+    description = "ID for the AMI to launch the jenkins master instance as."
+}
+
+variable "jenkins_slave_ami_id" {
+    description = "ID for the AMI to launch the jenkins slave instance as"
 }
 
 variable "instance_subnet_id" {

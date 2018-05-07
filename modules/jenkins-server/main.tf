@@ -47,4 +47,5 @@ module "jenkins_slave" {
   instance_subnet_id = "${var.instance_subnet_id}"
   env = "${var.env}"
   vpc_id = "${var.vpc_id}"
+  jenkins_slave_ami_id = "${var.jenkins_slave_ami_id}"
 }
