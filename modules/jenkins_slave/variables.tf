@@ -23,6 +23,10 @@ variable "jenkins_master_security_group_id" {
     description = "The security group ID of the jenkins master instance"
 }
 
+variable "jenkins_slave_ami_id" {
+    description = "ID for the AMI to launch the instance as."
+}
+
 # ---------------------------------------------------------------------------------------------------------------------
 # OPTIONAL PARAMETERS
 # These parameters have reasonable defaults.
@@ -50,11 +54,6 @@ variable "project_name" {
 variable "vaecid" {
     description = "The name for the VAECID tag of the instance"
     default     = "AWG20170915001"
-}
-
-variable "ami_id" {
-    description = "ID for the AMI to launch the instance as. If left blank, default to the latest AMI named nomad-consul-amazon-linux-*"
-    default     = ""
 }
 
 variable "vault_url" {
