@@ -7,6 +7,10 @@ variable "key_name" {
     description = "Desired name of AWS key pair"
 }
 
+variable "jenkins_ami_id" {
+    description = "ID for the AMI to launch the instance as."
+}
+
 variable "instance_subnet_id" {
     description = "ID for the subnet to deploy the Nexus server into"
 }
@@ -47,9 +51,4 @@ variable "project_name" {
 variable "vaecid" {
     description = "The name for the VAECID tag of the instance"
     default     = "AWG20170915001"
-}
-
-variable "ami_id" {
-    description = "ID for the AMI to launch the instance as. If left blank, default to the latest AMI named 'ascent-jenkins-master *'"
-    default     = ""
 }
