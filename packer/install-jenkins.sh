@@ -13,7 +13,7 @@ sudo chkconfig jenkins on
 
 # Move create-user bootstrap script to init.groovy.d
 sudo mkdir -p /var/lib/jenkins/init.groovy.d
-sudo /usr/local/bin/consul-template -once -config="$CONSUL_TEMPLATE_CONFIG" -vault-addr="$VAULT_ADDR" -vault-token="$VAULT_TOKEN"
+#sudo /usr/local/bin/consul-template -once -config="$CONSUL_TEMPLATE_CONFIG" -vault-addr="$VAULT_ADDR" -vault-token="$VAULT_TOKEN"
 sudo chown -R jenkins:jenkins /var/lib/jenkins/init.groovy.d
 sudo chmod -R 755 /var/lib/jenkins/init.groovy.d
 
