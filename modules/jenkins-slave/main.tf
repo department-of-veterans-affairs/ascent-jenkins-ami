@@ -6,20 +6,16 @@
 # JENKINS SLAVE EC2 INSTANCE
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_instance" "jenkins_slave" {
-  instance_type = "${var.instance_type}"
-  ami = "${var.ami_id}"
-  key_name = "${var.key_name}"
-  vpc_security_group_ids = ["${module.jenkins_security_group.jenkins_slave_security_group_id}"]
-  subnet_id = "${var.subnet_id}"
-  user_data = "${var.user_data}"
+  instance_type          = "${var.instance_type}"
+  ami                    = "${var.ami_id}"
+  key_name               = "${var.ssh_key_name}"
+  vpc_security_group_ids = ["${aws_security_group.jenkins_slave.id}"]
+  subnet_id              = "${var.subnet_id}"
+  user_data              = "${var.user_data}"
 
-  tags = [
-    {
-      key = "Name"
-      value = "${var.name}"
-    },
-    "${var.tags}",
-  ]
+  tags {
+    Name = "${var.name}"
+  }
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -67,7 +63,8 @@ resource "aws_security_group_rule" "allow_all_outbound" {
 module "docker_security_group_rules" {
   source = "../docker-security-group-rules"
 
-  security_group_id = "${aws_security_group.jenkins_slave.id}"
-  allowed_security_groups = "${var.allowed_security_groups}"
-  jnlp_access_port = "${var.api_port}"
+  security_group_id               = "${aws_security_group.jenkins_slave.id}"
+  allowed_inbound_cidr_blocks     = "${var.allowed_inbound_cidr_blocks}"
+  allowed_inbound_security_groups = "${var.allowed_inbound_security_groups}"
+  api_port                        = "${var.api_port}"
 }

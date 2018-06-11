@@ -8,24 +8,24 @@ variable "ami_id" {
 }
 
 variable "subnet_id" {
-    description = "ID for the subnet to deploy the Nexus server into"
+  description = "ID for the subnet to deploy the Nexus server into"
 }
 
 variable "vpc_id" {
-    description = "VPC ID for the security group"
+  description = "VPC ID for the security group"
 }
 
 variable "name" {
-    description = "unique name to give this instance"
+  description = "unique name to give this instance"
 }
 
-variable "allowed_cidr_blocks" {
+variable "allowed_inbound_cidr_blocks" {
   description = "List of cidr blocks allowed access to the security group"
   type        = "list"
   default     = []
 }
 
-variable "allowed_security_groups" {
+variable "allowed_inbound_security_groups" {
   description = "List of security groups allowed access to the security group"
   type        = "list"
   default     = []
@@ -37,14 +37,13 @@ variable "jenkins_slave_security_groups" {
   default     = []
 }
 
-
 # ---------------------------------------------------------------------------------------------------------------------
 # OPTIONAL PARAMETERS
 # These parameters have reasonable defaults.
 # ---------------------------------------------------------------------------------------------------------------------
 variable "instance_type" {
-    description = "The instance type of the instance (t2.micro, m4.large, etc)"
-    default     = "m4.large"
+  description = "The instance type of the instance (t2.micro, m4.large, etc)"
+  default     = "m4.large"
 }
 
 variable "tags" {
@@ -71,4 +70,9 @@ variable "ssh_port" {
 variable "jnlp_access_port" {
   description = "The port for jnlp access"
   default     = "8085"
+}
+
+variable "user_data" {
+  description = "Instance initialization script"
+  default     = ""
 }
