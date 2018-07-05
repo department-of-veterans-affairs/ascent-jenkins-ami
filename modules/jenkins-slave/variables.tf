@@ -31,19 +31,13 @@ variable "allowed_inbound_security_groups" {
   default     = []
 }
 
-variable "jenkins_slave_security_groups" {
-  description = "List of security groups to allow access to Jenkins slave ports"
-  type        = "list"
-  default     = []
-}
-
 # ---------------------------------------------------------------------------------------------------------------------
 # OPTIONAL PARAMETERS
 # These parameters have reasonable defaults.
 # ---------------------------------------------------------------------------------------------------------------------
 variable "instance_type" {
   description = "The instance type of the instance (t2.micro, m4.large, etc)"
-  default     = "m4.large"
+  default     = "m4.4xlarge"
 }
 
 variable "tags" {
@@ -57,19 +51,14 @@ variable "ssh_key_name" {
   default     = ""
 }
 
-variable "http_access_port" {
-  description = "The port for http access"
-  default     = "8080"
-}
-
 variable "ssh_port" {
   description = "The port for ssh access"
   default     = "22"
 }
 
-variable "jnlp_access_port" {
-  description = "The port for jnlp access"
-  default     = "8085"
+variable "api_port" {
+  description = "The port for docker api"
+  default     = "2375"
 }
 
 variable "user_data" {

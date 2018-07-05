@@ -3,49 +3,60 @@
 #######################################################################################################################
 
 # ---------------------------------------------------------------------------------------------------------------------
-# JENKINS MASTER SECURITY GROUP
-# ---------------------------------------------------------------------------------------------------------------------
-module "jenkins_security_group" {
-  source = "../security-groups/jenkins/"
-  vpc_id = "${var.vpc_id}"
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
 # JENKINS MASTER EC2 INSTANCE
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_instance" "jenkins_master" {
   instance_type = "${var.instance_type}"
+  ami           = "${var.ami_id}"
 
-  # Use value of supplied variable, if specified, but if not,
-  #     lookup the latest AMI we have for 'ascent-jenkins-master *'
-  ami = "${var.jenkins_ami_id}"
-
-  key_name = "${var.key_name}"
+  key_name = "${var.ssh_key_name}"
 
   # Our Security group to allow HTTP and SSH access
-  vpc_security_group_ids = ["${module.jenkins_security_group.jenkins_master_security_group_id}"]
+  vpc_security_group_ids = ["${aws_security_group.jenkins_master.id}"]
 
-  subnet_id = "${var.instance_subnet_id}"
+  subnet_id = "${var.subnet_id}"
+  user_data = "${var.user_data}"
 
   tags {
-    Name = "${var.instance_name}",
-    SAN = "${var.san}"
-    ProjectName = "${var.project_name}"
-    VAECID = "${var.vaecid}"
-    Environment = "${var.env}"
+    Name = "${var.name}"
   }
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
-# NOMAD and DOCKER SERVER TO RUN JENKINS SLAVES
+# JENKINS SECURITY GROUP
 # ---------------------------------------------------------------------------------------------------------------------
 
-module "jenkins_slave" {
-  source = "../jenkins_slave/"
-  jenkins_master_security_group_id = "${module.jenkins_security_group.jenkins_master_security_group_id}"
-  key_name = "${var.key_name}"
-  instance_subnet_id = "${var.instance_subnet_id}"
-  env = "${var.env}"
-  vpc_id = "${var.vpc_id}"
-  jenkins_slave_ami_id = "${var.jenkins_slave_ami_id}"
+resource "aws_security_group" "jenkins_master" {
+  name        = "${var.name}-master-sg"
+  description = "Security group for ${var.name}"
+  vpc_id      = "${var.vpc_id}"
+}
+
+resource "aws_security_group_rule" "allow_all_outbound" {
+  type        = "egress"
+  from_port   = 0
+  to_port     = 0
+  protocol    = "-1"
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = "${aws_security_group.jenkins_master.id}"
+}
+
+module "security_group_rules" {
+  source = "../jenkins-security-group-rules"
+
+  security_group_id               = "${aws_security_group.jenkins_master.id}"
+  allowed_inbound_cidr_blocks     = "${var.allowed_inbound_cidr_blocks}"
+  allowed_inbound_security_groups = "${var.allowed_inbound_security_groups}"
+  http_access_port                = "${var.http_access_port}"
+  ssh_port                        = "${var.ssh_port}"
+}
+
+module "security_slave_group_rules" {
+  source = "../jenkins-slave-security-group-rules"
+
+  security_group_id               = "${aws_security_group.jenkins_master.id}"
+  allowed_inbound_security_groups = "${var.jenkins_slave_security_groups}"
+  jnlp_access_port                = "${var.jnlp_access_port}"
+  ssh_port                        = "${var.ssh_port}"
 }

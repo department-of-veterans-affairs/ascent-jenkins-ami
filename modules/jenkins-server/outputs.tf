@@ -1,12 +1,11 @@
-output "jenkins_master_ip" {
+output "private_ip" {
   value = "${aws_instance.jenkins_master.private_ip}"
 }
 
-
-output "http_port" {
-  value = "${module.jenkins_security_group.http_port}"
+output "security_group_id" {
+  value = "${aws_security_group.jenkins_master.id}"
 }
 
-output "jenkins_master_security_group_id" {
-  value = "${module.jenkins_master_security_group_id}"
+output "http_port" {
+  value = "${var.http_access_port}"
 }
