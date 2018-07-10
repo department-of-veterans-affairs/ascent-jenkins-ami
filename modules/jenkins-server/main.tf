@@ -17,9 +17,7 @@ resource "aws_instance" "jenkins_master" {
   subnet_id = "${var.subnet_id}"
   user_data = "${var.user_data}"
 
-  tags {
-    Name = "${var.name}"
-  }
+  tags = "${merge(var.tags, map("Name", "${var.name}"))}"
 }
 
 # ---------------------------------------------------------------------------------------------------------------------

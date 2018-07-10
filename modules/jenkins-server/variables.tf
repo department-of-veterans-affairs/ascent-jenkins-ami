@@ -76,3 +76,9 @@ variable "user_data" {
   description = "Instance initialization script"
   default     = ""
 }
+
+variable "tags" {
+  description = "Tags to apply to the EC2 instance. Name will be applied by default."
+  type        = "map"
+  default     = {}
+}
