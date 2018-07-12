@@ -72,4 +72,5 @@ ssh-slaves
 email-ext
 blueocean
 hashicorp-vault-plugin
-docker-slaves
+docker
+hipchat
