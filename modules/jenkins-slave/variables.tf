@@ -31,6 +31,10 @@ variable "allowed_inbound_security_groups" {
   default     = []
 }
 
+variable "instance_profile_name" {
+  description = "The name of the IAM profiel to launch the instance with."
+}
+
 # ---------------------------------------------------------------------------------------------------------------------
 # OPTIONAL PARAMETERS
 # These parameters have reasonable defaults.

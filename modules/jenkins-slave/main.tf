@@ -12,6 +12,7 @@ resource "aws_instance" "jenkins_slave" {
   vpc_security_group_ids = ["${aws_security_group.jenkins_slave.id}"]
   subnet_id              = "${var.subnet_id}"
   user_data              = "${var.user_data}"
+  iam_instance_profile   = "${var.instance_profile_name}"
 
   tags {
     Name = "${var.name}"
